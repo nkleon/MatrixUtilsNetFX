@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace MatrixMultiplier
+namespace MatrixUtilsNetFX
 {
     /// <summary>
     /// Interaction logic for ResultWindow.xaml
@@ -57,9 +57,11 @@ namespace MatrixMultiplier
                 {
                     var textBox = new TextBox
                     {
-                        Width = 40,
-                        Height = 40,
+                        //Width = 40,
+                        Height = 25,
+                        MinWidth = 25,
                         Name = $"TextBox_R{i + 1}C{j + 1}",
+                        HorizontalAlignment = HorizontalAlignment.Center,
                         IsReadOnly = true
                     };
                     Grid.SetRow(textBox, i);
@@ -67,7 +69,6 @@ namespace MatrixMultiplier
                     ResultGrid.Children.Add(textBox);
                 }
             }
-
 
             foreach (TextBox textBox in ResultGrid.Children)
             {

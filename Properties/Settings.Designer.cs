@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MatrixDeterminant.Properties
+namespace MatrixUtilsNetFX.Properties
 {
 
 
