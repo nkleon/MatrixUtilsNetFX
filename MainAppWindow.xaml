@@ -17,6 +17,29 @@
                     <Grid x:Name="Determinant_subGridMatrix" Background="LightGray" Margin="10,90,10,10"/>
                 </Grid>
             </TabItem>
+            <TabItem x:Name="AddMinusTab" Header="Add/Subtract">
+                <Grid Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="33*"/>
+                        <ColumnDefinition Width="761*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Enter matrix dimensions:" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="AddMinus_txtRowsA" HorizontalAlignment="Left" Margin="184,28,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="AddMinus_txtsDimensions_TextChanged"/>
+                    <TextBox x:Name="AddMinus_txtColsA" HorizontalAlignment="Left" Margin="241,28,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="AddMinus_txtsDimensions_TextChanged"/>
+                    <TextBox x:Name="AddMinus_txtRowsB" HorizontalAlignment="Left" Margin="184,66,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="AddMinus_txtsDimensions_TextChanged"/>
+                    <TextBox x:Name="AddMinus_txtColsB" HorizontalAlignment="Left" Margin="241,66,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="AddMinus_txtsDimensions_TextChanged"/>
+                    <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="219,26,0,0" Grid.Column="1"/>
+                    <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="219,62,0,0" Grid.Column="1"/>
+                    <Label Content="Matrix A:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="122,22,0,0" Grid.Column="1"/>
+                    <Label Content="Matrix B:" HorizontalAlignment="Left" Margin="122,62,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <Button x:Name="AddMinus_btnGenerateEntryGrids" Content="Generate entry grids" HorizontalAlignment="Left" Margin="66,103,0,0" VerticalAlignment="Top" Click="AddMinus_btnGenerateEntryGrids_Click" Grid.Column="1" IsEnabled="False"/>
+                    <Button x:Name="AddMinus_btnFindSum" Content="Find sum" HorizontalAlignment="Left" Margin="199,103,0,0" VerticalAlignment="Top" Click="AddMinus_btnFindSum_Click" IsEnabled="False" Grid.Column="1"/>
+                    <Button x:Name="AddMinus_btnFindDiff" Content="Find difference" HorizontalAlignment="Left" Margin="278,103,0,0" VerticalAlignment="Top" Click="AddMinus_btnFindDiff_Click" IsEnabled="False" Grid.Column="1"/>
+                    <Button x:Name="AddMinus_btnClearAll" Content="Clear all" HorizontalAlignment="Left" Margin="0,103,0,0" VerticalAlignment="Top" Click="AddMinus_btnClearAll_Click" Grid.Column="1"/>
+                    <Grid x:Name="AddMinus_subGridA" Background="LightGray" Margin="0,150,400,0" Grid.ColumnSpan="2"/>
+                    <Grid x:Name="AddMinus_subGridB" Background="LightGray" Margin="367,150,0,0" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
             <TabItem x:Name="tabMultiply" Header="Multiply">
                 <Grid Background="Transparent">
                     <Grid.ColumnDefinitions>

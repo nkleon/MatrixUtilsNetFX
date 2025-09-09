@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddMinusTabLogic.cs" />
     <Compile Include="DeterminantTabLogic.cs" />
     <Compile Include="MatrixOperations.cs" />
     <Compile Include="MultiplyTabLogic.cs" />

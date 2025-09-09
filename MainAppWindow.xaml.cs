@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MatrixUtilsNetFX
 {
@@ -48,6 +37,58 @@ namespace MatrixUtilsNetFX
                 return;
             }
             Determinant_btnGenerateEntryGrid.IsEnabled = true;
+        }
+
+        /// <summary>
+        /// Event handlers for Addition/Subtraction functionality
+        /// </summary>
+
+        private void AddMinus_txtsDimensions_TextChanged(object sender, RoutedEventArgs e)
+        {
+            if (!AddMinusTabLogic.validateDimensionsTextBoxes(AddMinus_txtRowsA.Text, AddMinus_txtColsA.Text, AddMinus_txtRowsB.Text, AddMinus_txtColsB.Text))
+            {
+                AddMinus_btnGenerateEntryGrids.IsEnabled = false;
+                AddMinus_btnFindSum.IsEnabled = false;
+                AddMinus_btnFindDiff.IsEnabled = false;
+                return;
+            }
+            AddMinus_btnGenerateEntryGrids.IsEnabled = true;
+        }
+
+        private void AddMinus_btnGenerateEntryGrids_Click(object sender, RoutedEventArgs e)
+        {
+            AddMinusTabLogic.generateEntryGrids(AddMinus_subGridA, AddMinus_subGridB, AddMinus_txtRowsA.Text, AddMinus_txtColsA.Text, AddMinus_txtRowsB.Text, AddMinus_txtColsB.Text);
+            AddMinus_btnFindSum.IsEnabled = true;
+            AddMinus_btnFindDiff.IsEnabled = true;
+        }
+
+        private void AddMinus_btnFindSum_Click(object sender, RoutedEventArgs e)
+        {
+            AddMinusTabLogic.findSum(AddMinus_subGridA, AddMinus_subGridB, AddMinus_txtRowsA.Text, AddMinus_txtColsA.Text, AddMinus_txtRowsB.Text, AddMinus_txtColsB.Text);
+        }
+
+        private void AddMinus_btnFindDiff_Click(object sender, RoutedEventArgs e)
+        {
+            AddMinusTabLogic.findDiff(AddMinus_subGridA, AddMinus_subGridB, AddMinus_txtRowsA.Text, AddMinus_txtColsA.Text, AddMinus_txtRowsB.Text, AddMinus_txtColsB.Text);
+        }
+
+        private void AddMinus_btnClearAll_Click(object sender, RoutedEventArgs e)
+        {
+            AddMinus_txtRowsA.Clear();
+            AddMinus_txtColsA.Clear();
+            AddMinus_txtRowsB.Clear();
+            AddMinus_txtColsB.Clear();
+
+            AddMinus_subGridA.Children.Clear();
+            AddMinus_subGridB.Children.Clear();
+
+            AddMinus_subGridA.RowDefinitions.Clear();
+            AddMinus_subGridA.ColumnDefinitions.Clear();
+            AddMinus_subGridB.RowDefinitions.Clear();
+            AddMinus_subGridB.ColumnDefinitions.Clear();
+
+            AddMinus_btnFindSum.IsEnabled = false;
+            AddMinus_btnFindDiff.IsEnabled = false;
         }
 
         /// <summary>
