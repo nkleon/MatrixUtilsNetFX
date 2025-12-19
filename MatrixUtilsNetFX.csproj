@@ -55,13 +55,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AddMinusTabLogic.cs" />
-    <Compile Include="DeterminantTabLogic.cs" />
     <Compile Include="MatrixOperations.cs" />
-    <Compile Include="MultiplyTabLogic.cs" />
     <Compile Include="ResultWindow.xaml.cs">
       <DependentUpon>ResultWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SubGridUtilities.cs" />
+    <Compile Include="TextValidationCheckers.cs" />
     <Page Include="MainAppWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

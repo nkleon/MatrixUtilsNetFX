@@ -3,63 +3,98 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:MatrixUtilsNetFX"
         mc:Ignorable="d"
         Title="MatrixUtils" Height="500" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <x:Array x:Key="MatrixDimensions" Type="{x:Type sys:Int32}">
+            <sys:Int32>1</sys:Int32>
+            <sys:Int32>2</sys:Int32>
+            <sys:Int32>3</sys:Int32>
+            <sys:Int32>4</sys:Int32>
+            <sys:Int32>5</sys:Int32>
+            <sys:Int32>6</sys:Int32>
+            <sys:Int32>7</sys:Int32>
+        </x:Array>
+    </Window.Resources>
     <Grid>
         <TabControl>
-            <TabItem x:Name="tabDeterminant" Header="Determinant">
+            <TabItem Header="Determinant/Inverse">
                 <Grid Background="Transparent">
-                    <Label Content="Enter matrix dimensions" HorizontalAlignment="Left" Margin="41,6,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="Determinant_txtDimensions" HorizontalAlignment="Left" Margin="194,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="38" TextChanged="Determinant_txtDimensions_TextChanged" MaxLength="1" />
-                    <Button x:Name="Determinant_btnGenerateEntryGrid" Content="Generate entry grid" HorizontalAlignment="Left" Margin="41,54,0,0" VerticalAlignment="Top" Click="Determinant_btnGenerateEntryGrid_Click" IsEnabled="False" />
-                    <Button x:Name="Determinant_btnFindDeterminant" Content="Find determinant" HorizontalAlignment="Left" Margin="174,54,0,0" VerticalAlignment="Top" Click="Determinant_btnFIndDeterminant_Click" IsEnabled="False" />
-                    <Grid x:Name="Determinant_subGridMatrix" Background="LightGray" Margin="10,90,10,10"/>
+                    <Label Content="Enter matrix dimensions:" HorizontalAlignment="Left" Margin="40,6,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="DetInv_cBoxDim" HorizontalAlignment="Left" Margin="195,10,0,0" VerticalAlignment="Top" Width="35" SelectionChanged="DetInv_cBoxDim_SelectionChanged" ItemsSource="{StaticResource MatrixDimensions}"/>
+                    <Button x:Name="DetInv_btnClear" Content="Clear all" HorizontalAlignment="Left" Margin="40,54,0,0" VerticalAlignment="Top" Click="DetInv_btnClear_Click"/>
+                    <Button x:Name="DetInv_btnGenGrid" Content="Generate entry grid" HorizontalAlignment="Left" Margin="110,54,0,0" VerticalAlignment="Top" Click="DetInv_btnGenGrid_Click" IsEnabled="False" />
+                    <Button x:Name="DetInv_btnFindDet" Content="Find determinant" HorizontalAlignment="Left" Margin="240,54,0,0" VerticalAlignment="Top" Click="DetInv_btnFindDet_Click" IsEnabled="False" />
+                    <Button x:Name="DetInv_btnFindInv" Content="Find inverse" HorizontalAlignment="Left" Margin="360,54,0,0" VerticalAlignment="Top" Click="DetInv_btnFindInv_Click" IsEnabled="False" />
+                    <UniformGrid x:Name="DetInv_subGrid" Background="LightGray" Margin="5,90,5,5"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="AddMinusTab" Header="Add/Subtract">
+            <TabItem Header="Add/Subtract">
                 <Grid Background="Transparent">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="33*"/>
                         <ColumnDefinition Width="761*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="Enter matrix dimensions:" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="AddMinus_txtRowsA" HorizontalAlignment="Left" Margin="184,28,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="AddMinus_txtsDimensions_TextChanged"/>
-                    <TextBox x:Name="AddMinus_txtColsA" HorizontalAlignment="Left" Margin="241,28,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="AddMinus_txtsDimensions_TextChanged"/>
-                    <TextBox x:Name="AddMinus_txtRowsB" HorizontalAlignment="Left" Margin="184,66,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="AddMinus_txtsDimensions_TextChanged"/>
-                    <TextBox x:Name="AddMinus_txtColsB" HorizontalAlignment="Left" Margin="241,66,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="AddMinus_txtsDimensions_TextChanged"/>
-                    <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="219,26,0,0" Grid.Column="1"/>
-                    <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="219,62,0,0" Grid.Column="1"/>
-                    <Label Content="Matrix A:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="122,22,0,0" Grid.Column="1"/>
-                    <Label Content="Matrix B:" HorizontalAlignment="Left" Margin="122,62,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                    <Button x:Name="AddMinus_btnGenerateEntryGrids" Content="Generate entry grids" HorizontalAlignment="Left" Margin="66,103,0,0" VerticalAlignment="Top" Click="AddMinus_btnGenerateEntryGrids_Click" Grid.Column="1" IsEnabled="False"/>
-                    <Button x:Name="AddMinus_btnFindSum" Content="Find sum" HorizontalAlignment="Left" Margin="199,103,0,0" VerticalAlignment="Top" Click="AddMinus_btnFindSum_Click" IsEnabled="False" Grid.Column="1"/>
-                    <Button x:Name="AddMinus_btnFindDiff" Content="Find difference" HorizontalAlignment="Left" Margin="278,103,0,0" VerticalAlignment="Top" Click="AddMinus_btnFindDiff_Click" IsEnabled="False" Grid.Column="1"/>
-                    <Button x:Name="AddMinus_btnClearAll" Content="Clear all" HorizontalAlignment="Left" Margin="0,103,0,0" VerticalAlignment="Top" Click="AddMinus_btnClearAll_Click" Grid.Column="1"/>
-                    <Grid x:Name="AddMinus_subGridA" Background="LightGray" Margin="0,150,400,0" Grid.ColumnSpan="2"/>
-                    <Grid x:Name="AddMinus_subGridB" Background="LightGray" Margin="367,150,0,0" Grid.Column="1"/>
+                    <Label Content="Enter dimensions of matrices:" HorizontalAlignment="Left" Margin="40,22,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                    <ComboBox x:Name="AddSub_cBoxRow" HorizontalAlignment="Left" Margin="184,28,0,0" VerticalAlignment="Top" Width="35" Grid.Column="1" SelectionChanged="AddSub_cBoxesDims_SelectionChanged" ItemsSource="{StaticResource MatrixDimensions}"/>
+                    <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="224,26,0,0" Grid.Column="1"/>
+                    <ComboBox x:Name="AddSub_cBoxCol" HorizontalAlignment="Left" Margin="246,28,0,0" VerticalAlignment="Top" Width="35" Grid.Column="1" SelectionChanged="AddSub_cBoxesDims_SelectionChanged" ItemsSource="{StaticResource MatrixDimensions}"/>
+                    <Button x:Name="AddSub_btnClear" Content="Clear all" HorizontalAlignment="Left" Margin="0,70,0,0" VerticalAlignment="Top" Click="AddSub_btnClear_Click" Grid.Column="1"/>
+                    <Button x:Name="AddSub_btnGenGrids" Content="Generate entry grids" HorizontalAlignment="Left" Margin="66,70,0,0" VerticalAlignment="Top" Click="AddSub_btnGenGrids_Click" Grid.Column="1" IsEnabled="False"/>
+                    <Button x:Name="AddSub_btnSwapMatrices" Content="Swap left and right matrices" HorizontalAlignment="Left" Margin="387,70,0,0" VerticalAlignment="Top" Click="AddSub_btnSwapMatrices_Click" IsEnabled="False" Grid.Column="1"/>
+                    <Button x:Name="AddSub_btnFindSum" Content="Find sum" HorizontalAlignment="Left" Margin="199,70,0,0" VerticalAlignment="Top" Click="AddSub_btnFindSum_Click" IsEnabled="False" Grid.Column="1"/>
+                    <Button x:Name="AddSub_btnFindDiff" Content="Find difference" HorizontalAlignment="Left" Margin="278,70,0,0" VerticalAlignment="Top" Click="AddSub_btnFindDiff_Click" IsEnabled="False" Grid.Column="1"/>
+                    <UniformGrid x:Name="AddSub_subGridA" Background="LightGray" Margin="0,109,381,0" Grid.ColumnSpan="2"/>
+                    <UniformGrid x:Name="AddSub_subGridB" Background="LightGray" Margin="381,109,0,0" Grid.Column="1"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tabMultiply" Header="Multiply">
+            <TabItem Header="Multiply" Height="20" VerticalAlignment="Bottom">
                 <Grid Background="Transparent">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="33*"/>
-                        <ColumnDefinition Width="761*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Enter matrix dimensions:" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="Multiply_txtRowsA" HorizontalAlignment="Left" Margin="184,28,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="Multiply_txtsDimensions_TextChanged"/>
-                    <TextBox x:Name="Multiply_txtColsA" HorizontalAlignment="Left" Margin="241,28,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="Multiply_txtsDimensions_TextChanged"/>
-                    <TextBox x:Name="Multiply_txtRowsB" HorizontalAlignment="Left" Margin="184,66,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="Multiply_txtsDimensions_TextChanged"/>
-                    <TextBox x:Name="Multiply_txtColsB" HorizontalAlignment="Left" Margin="241,66,0,0" VerticalAlignment="Top" Width="30" MaxLength="1" Grid.Column="1" TextChanged="Multiply_txtsDimensions_TextChanged"/>
-                    <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="219,26,0,0" Grid.Column="1"/>
-                    <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="219,62,0,0" Grid.Column="1"/>
-                    <Label Content="Matrix A:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="122,22,0,0" Grid.Column="1"/>
-                    <Label Content="Matrix B:" HorizontalAlignment="Left" Margin="122,62,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                    <Button x:Name="Multiply_btnGenerateEntryGrids" Content="Generate entry grids" HorizontalAlignment="Left" Margin="66,103,0,0" VerticalAlignment="Top" Click="Multiply_btnGenerateEntryGrids_Click" Grid.Column="1" IsEnabled="False"/>
-                    <Button x:Name="Multiply_btnFindProduct" Content="Find product" HorizontalAlignment="Left" Margin="199,103,0,0" VerticalAlignment="Top" Click="Multiply_btnFindProduct_Click" IsEnabled="False" Grid.Column="1"/>
-                    <Button x:Name="Multiply_btnClearAll" Content="Clear all" HorizontalAlignment="Left" Margin="0,103,0,0" VerticalAlignment="Top" Click="Multiply_btnClearAll_Click" Grid.Column="1"/>
-                    <Grid x:Name="Multiply_subGridA" Background="LightGray" Margin="0,150,400,0" Grid.ColumnSpan="2"/>
-                    <Grid x:Name="Multiply_subGridB" Background="LightGray" Margin="367,150,0,0" Grid.Column="1"/>
+                    <TabControl>
+                        <TabItem Header="Multiply matrix by scalar">
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="33*"/>
+                                    <ColumnDefinition Width="761*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Enter dimensions of matrices:" HorizontalAlignment="Left" Margin="40,22,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                                <ComboBox x:Name="SMul_cBoxRow" HorizontalAlignment="Left" Margin="184,28,0,0" VerticalAlignment="Top" Width="35" Grid.Column="1" SelectionChanged="SMul_cBoxesDims_SelectionChanged" ItemsSource="{StaticResource MatrixDimensions}"/>
+                                <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="224,26,0,0" Grid.Column="1"/>
+                                <ComboBox x:Name="SMul_cBoxCol" HorizontalAlignment="Left" Margin="246,28,0,0" VerticalAlignment="Top" Width="35" Grid.Column="1" SelectionChanged="SMul_cBoxesDims_SelectionChanged" ItemsSource="{StaticResource MatrixDimensions}"/>
+                                <Label Content="Enter scalar:" HorizontalAlignment="Left" Margin="40,54,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                                <TextBox x:Name="SMul_txtScalar" HorizontalAlignment="Left" Margin="140,60,0,0" VerticalAlignment="Top" Width="148" Grid.Column="1" TextChanged="SMul_txtScalar_TextChanged" Height="20"/>
+                                <Button x:Name="SMul_btnClear" Content="Clear all" HorizontalAlignment="Left" Margin="0,96,0,0" VerticalAlignment="Top" Click="SMul_btnClear_Click" Grid.Column="1"/>
+                                <Button x:Name="SMul_btnGenGrid" Content="Generate entry grids" HorizontalAlignment="Left" Margin="66,96,0,0" VerticalAlignment="Top" Click="SMul_btnGenGrid_Click" Grid.Column="1" IsEnabled="False"/>
+                                <Button x:Name="SMul_btnFindProd" Content="Find product" HorizontalAlignment="Left" Margin="199,96,0,0" VerticalAlignment="Top" Click="SMul_btnFindProd_Click" IsEnabled="False" Grid.Column="1"/>
+                                <UniformGrid x:Name="SMul_subGrid" Background="LightGray" Margin="5,130,5,5" Grid.ColumnSpan="2"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Multiply two matrices">
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="33*"/>
+                                    <ColumnDefinition Width="761*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Enter dimensions of matrices:" HorizontalAlignment="Left" Margin="40,22,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                                <Label Content="Matrix A:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="172,22,0,0" Grid.Column="1"/>
+                                <ComboBox x:Name="MMul_cBoxRowA" HorizontalAlignment="Left" Margin="234,28,0,0" VerticalAlignment="Top" Width="35" Grid.Column="1" SelectionChanged="MMul_cBoxesDims_SelectionChanged" ItemsSource="{StaticResource MatrixDimensions}"/>
+                                <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="274,26,0,0" Grid.Column="1"/>
+                                <ComboBox x:Name="MMul_cBoxColA" HorizontalAlignment="Left" Margin="296,28,0,0" VerticalAlignment="Top" Width="35" Grid.Column="1" SelectionChanged="MMul_cBoxesDims_SelectionChanged" ItemsSource="{StaticResource MatrixDimensions}"/>
+                                <Label Content="Matrix B:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="172,48,0,0" Grid.Column="1"/>
+                                <ComboBox x:Name="MMul_cBoxRowB" HorizontalAlignment="Left" Margin="234,54,0,0" VerticalAlignment="Top" Width="35" Grid.Column="1" SelectionChanged="MMul_cBoxesDims_SelectionChanged" ItemsSource="{StaticResource MatrixDimensions}"/>
+                                <Label Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="274,52,0,0" Grid.Column="1"/>
+                                <ComboBox x:Name="MMul_cBoxColB" HorizontalAlignment="Left" Margin="296,54,0,0" VerticalAlignment="Top" Width="35" Grid.Column="1" SelectionChanged="MMul_cBoxesDims_SelectionChanged" ItemsSource="{StaticResource MatrixDimensions}"/>
+                                <Button x:Name="MMul_btnClear" Content="Clear all" HorizontalAlignment="Left" Margin="0,90,0,0" VerticalAlignment="Top" Click="MMul_btnClear_Click" Grid.Column="1"/>
+                                <Button x:Name="MMul_btnGenGrids" Content="Generate entry grids" HorizontalAlignment="Left" Margin="66,90,0,0" VerticalAlignment="Top" Click="MMul_btnGenGrids_Click" Grid.Column="1" IsEnabled="False"/>
+                                <Button x:Name="MMul_btnFindProd" Content="Find product" HorizontalAlignment="Left" Margin="199,90,0,0" VerticalAlignment="Top" Click="MMul_btnFindProd_Click" IsEnabled="False" Grid.Column="1"/>
+                                <Button x:Name="MMul_btnSwapMatrices" Content="Swap left and right matrices" HorizontalAlignment="Left" Margin="292,90,0,0" VerticalAlignment="Top" Click="MMul_btnSwapMatrices_Click" IsEnabled="False" Grid.Column="1"/>
+                                <UniformGrid x:Name="MMul_subGridA" Background="LightGray" Margin="0,130,378,0" Grid.ColumnSpan="2"/>
+                                <UniformGrid x:Name="MMul_subGridB" Background="LightGray" Margin="378,130,0,0" Grid.Column="1"/>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
                 </Grid>
             </TabItem>
         </TabControl>

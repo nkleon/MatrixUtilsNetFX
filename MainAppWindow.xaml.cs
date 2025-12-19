@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace MatrixUtilsNetFX
@@ -14,125 +15,363 @@ namespace MatrixUtilsNetFX
         }
 
         /// <summary>
-        /// Event handlers for Determinant functionality
+        /// Event handlers for Determinant/Inverse functionality
         /// </summary>
 
-        private void Determinant_btnGenerateEntryGrid_Click(object sender, RoutedEventArgs e)
+        private void DetInv_cBoxDim_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DeterminantTabLogic.generateEntryGrid(Determinant_subGridMatrix, Determinant_txtDimensions.Text);
-            Determinant_btnFindDeterminant.IsEnabled = true;
-        }
-
-        private void Determinant_btnFIndDeterminant_Click(object sender, RoutedEventArgs e)
-        {
-            DeterminantTabLogic.findDeterminant(Determinant_subGridMatrix, Determinant_txtDimensions.Text);
-        }
-
-        private void Determinant_txtDimensions_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (!DeterminantTabLogic.validateDimensionsTextBox(Determinant_txtDimensions.Text))
+            if (DetInv_cBoxDim.SelectedItem != null)
             {
-                Determinant_btnGenerateEntryGrid.IsEnabled = false;
-                Determinant_btnFindDeterminant.IsEnabled = false;
+                DetInv_btnGenGrid.IsEnabled = true;
                 return;
             }
-            Determinant_btnGenerateEntryGrid.IsEnabled = true;
+            DetInv_btnGenGrid.IsEnabled = false;
+            DetInv_btnFindDet.IsEnabled = false;
+            DetInv_btnFindInv.IsEnabled = false;
+        }
+
+        private void DetInv_btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            DetInv_cBoxDim.SelectedIndex = -1;
+            SubGridUtilities.ClearSubGridContents(DetInv_subGrid);
+
+            DetInv_btnGenGrid.IsEnabled = false;
+            DetInv_btnFindDet.IsEnabled = false;
+            DetInv_btnFindInv.IsEnabled = false;
+        }
+
+        private void DetInv_btnGenGrid_Click(object sender, RoutedEventArgs e)
+        {
+            SubGridUtilities.PopulateSubGrid(
+                    DetInv_subGrid,
+                    (int)DetInv_cBoxDim.SelectedItem,
+                    (int)DetInv_cBoxDim.SelectedItem
+                );
+            DetInv_btnFindDet.IsEnabled = true;
+            DetInv_btnFindInv.IsEnabled = true;
+        }
+
+        private void DetInv_btnFindDet_Click(object sender, RoutedEventArgs e)
+        {
+            string[] subGridStrings = SubGridUtilities.GetSubGridTextBoxValues_1dStrArray(DetInv_subGrid);
+            if (!TextValidationCheckers.AreAllStringsParsableNumeric(TypeCode.Decimal, subGridStrings))
+            {
+                MessageBox.Show(
+                        "Ensure all textboxes in the grid are filled and that they only have numeric values.",
+                        "Missing or invalid values",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                return;
+            }
+            decimal determinant = MatrixOperations.CalculateMatrixDeterminant(
+                    SubGridUtilities.GetSubGridTextBoxValuesDecimal(DetInv_subGrid)
+                );
+            MessageBox.Show($"Determinant: {determinant}", "Answer");
+        }
+
+        private void DetInv_btnFindInv_Click(object sender, RoutedEventArgs e)
+        {
+            string[] subGridStrings = SubGridUtilities.GetSubGridTextBoxValues_1dStrArray(DetInv_subGrid);
+            if (!TextValidationCheckers.AreAllStringsParsableNumeric(TypeCode.Decimal, subGridStrings))
+            {
+                MessageBox.Show(
+                        "Ensure all textboxes in the grid are filled and that they only have numeric values.",
+                        "Missing or invalid values",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                return;
+            }
+            try
+            {
+                decimal[,] inverse = MatrixOperations.CalculateMatrixInverse(
+                    SubGridUtilities.GetSubGridTextBoxValuesDecimal(DetInv_subGrid)
+                );
+
+                new ResultWindow(inverse).ShowDialog();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(
+                    "This matrix is not invertible",
+                    "Warning",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning
+                );
+            }
         }
 
         /// <summary>
         /// Event handlers for Addition/Subtraction functionality
         /// </summary>
 
-        private void AddMinus_txtsDimensions_TextChanged(object sender, RoutedEventArgs e)
+        private void AddSub_cBoxesDims_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (!AddMinusTabLogic.validateDimensionsTextBoxes(AddMinus_txtRowsA.Text, AddMinus_txtColsA.Text, AddMinus_txtRowsB.Text, AddMinus_txtColsB.Text))
+            if (AddSub_cBoxRow.SelectedItem != null &&
+                AddSub_cBoxCol.SelectedItem != null
+                )
             {
-                AddMinus_btnGenerateEntryGrids.IsEnabled = false;
-                AddMinus_btnFindSum.IsEnabled = false;
-                AddMinus_btnFindDiff.IsEnabled = false;
+                AddSub_btnGenGrids.IsEnabled = true;
                 return;
             }
-            AddMinus_btnGenerateEntryGrids.IsEnabled = true;
+            AddSub_btnGenGrids.IsEnabled = false;
+            AddSub_btnFindSum.IsEnabled = false;
+            AddSub_btnFindDiff.IsEnabled = false;
+            AddSub_btnSwapMatrices.IsEnabled = false;
         }
 
-        private void AddMinus_btnGenerateEntryGrids_Click(object sender, RoutedEventArgs e)
+        private void AddSub_btnClear_Click(object sender, RoutedEventArgs e)
         {
-            AddMinusTabLogic.generateEntryGrids(AddMinus_subGridA, AddMinus_subGridB, AddMinus_txtRowsA.Text, AddMinus_txtColsA.Text, AddMinus_txtRowsB.Text, AddMinus_txtColsB.Text);
-            AddMinus_btnFindSum.IsEnabled = true;
-            AddMinus_btnFindDiff.IsEnabled = true;
+            AddSub_cBoxRow.SelectedIndex = -1;
+            AddSub_cBoxCol.SelectedIndex = -1;
+
+            SubGridUtilities.ClearSubGridContents(AddSub_subGridA);
+            SubGridUtilities.ClearSubGridContents(AddSub_subGridB);
+
+            AddSub_btnGenGrids.IsEnabled = false;
+            AddSub_btnFindSum.IsEnabled = false;
+            AddSub_btnFindDiff.IsEnabled = false;
+            AddSub_btnSwapMatrices.IsEnabled = false;
         }
 
-        private void AddMinus_btnFindSum_Click(object sender, RoutedEventArgs e)
+        private void AddSub_btnGenGrids_Click(object sender, RoutedEventArgs e)
         {
-            AddMinusTabLogic.findSum(AddMinus_subGridA, AddMinus_subGridB, AddMinus_txtRowsA.Text, AddMinus_txtColsA.Text, AddMinus_txtRowsB.Text, AddMinus_txtColsB.Text);
+            SubGridUtilities.PopulateSubGrid(
+                    AddSub_subGridA,
+                    (int)AddSub_cBoxRow.SelectedItem,
+                    (int)AddSub_cBoxCol.SelectedItem
+                );
+            SubGridUtilities.PopulateSubGrid(
+                    AddSub_subGridB,
+                    (int)AddSub_cBoxRow.SelectedItem,
+                    (int)AddSub_cBoxCol.SelectedItem
+                );
+            AddSub_btnFindSum.IsEnabled = true;
+            AddSub_btnFindDiff.IsEnabled = true;
+            AddSub_btnSwapMatrices.IsEnabled = true;
         }
 
-        private void AddMinus_btnFindDiff_Click(object sender, RoutedEventArgs e)
+        private void AddSub_btnFindSum_Click(object sender, RoutedEventArgs e)
         {
-            AddMinusTabLogic.findDiff(AddMinus_subGridA, AddMinus_subGridB, AddMinus_txtRowsA.Text, AddMinus_txtColsA.Text, AddMinus_txtRowsB.Text, AddMinus_txtColsB.Text);
+            string[] subGridStringsA = SubGridUtilities.GetSubGridTextBoxValues_1dStrArray(AddSub_subGridA);
+            string[] subGridStringsB = SubGridUtilities.GetSubGridTextBoxValues_1dStrArray(AddSub_subGridB);
+            if (!TextValidationCheckers.AreAllStringsParsableNumeric(TypeCode.Decimal, subGridStringsA) ||
+                !TextValidationCheckers.AreAllStringsParsableNumeric(TypeCode.Decimal, subGridStringsB)
+                )
+            {
+                MessageBox.Show(
+                        "Ensure all textboxes in the grid are filled and that they only have numeric values.",
+                        "Missing or invalid values",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                return;
+            }
+            decimal[,] sum = MatrixOperations.AddMatrices(
+                    SubGridUtilities.GetSubGridTextBoxValuesDecimal(AddSub_subGridA),
+                    SubGridUtilities.GetSubGridTextBoxValuesDecimal(AddSub_subGridB)
+                );
+            new ResultWindow(sum).ShowDialog();
         }
 
-        private void AddMinus_btnClearAll_Click(object sender, RoutedEventArgs e)
+        private void AddSub_btnFindDiff_Click(object sender, RoutedEventArgs e)
         {
-            AddMinus_txtRowsA.Clear();
-            AddMinus_txtColsA.Clear();
-            AddMinus_txtRowsB.Clear();
-            AddMinus_txtColsB.Clear();
+            string[] subGridStringsA = SubGridUtilities.GetSubGridTextBoxValues_1dStrArray(AddSub_subGridA);
+            string[] subGridStringsB = SubGridUtilities.GetSubGridTextBoxValues_1dStrArray(AddSub_subGridB);
+            if (!TextValidationCheckers.AreAllStringsParsableNumeric(TypeCode.Decimal, subGridStringsA) ||
+                !TextValidationCheckers.AreAllStringsParsableNumeric(TypeCode.Decimal, subGridStringsB)
+                )
+            {
+                MessageBox.Show(
+                        "Ensure all textboxes in the grid are filled and that they only have numeric values.",
+                        "Missing or invalid values",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                return;
+            }
+            decimal[,] difference = MatrixOperations.SubtractMatrices(
+                    SubGridUtilities.GetSubGridTextBoxValuesDecimal(AddSub_subGridA),
+                    SubGridUtilities.GetSubGridTextBoxValuesDecimal(AddSub_subGridB)
+                );
+            new ResultWindow(difference).ShowDialog();
+        }
 
-            AddMinus_subGridA.Children.Clear();
-            AddMinus_subGridB.Children.Clear();
-
-            AddMinus_subGridA.RowDefinitions.Clear();
-            AddMinus_subGridA.ColumnDefinitions.Clear();
-            AddMinus_subGridB.RowDefinitions.Clear();
-            AddMinus_subGridB.ColumnDefinitions.Clear();
-
-            AddMinus_btnFindSum.IsEnabled = false;
-            AddMinus_btnFindDiff.IsEnabled = false;
+        private void AddSub_btnSwapMatrices_Click(object sender, RoutedEventArgs e)
+        {
+            SubGridUtilities.SwapSubGrids(AddSub_subGridA, AddSub_subGridB);
         }
 
         /// <summary>
-        /// Event handlers for Multiplication functionality
+        /// Event handlers for Scalar Multiplication functionality
         /// </summary>
 
-        private void Multiply_txtsDimensions_TextChanged(object sender, RoutedEventArgs e)
+        private void SMul_cBoxesDims_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (!MultiplyTabLogic.validateDimensionsTextBoxes(Multiply_txtRowsA.Text, Multiply_txtColsA.Text, Multiply_txtRowsB.Text, Multiply_txtColsB.Text))
+            if (SMul_cBoxRow.SelectedItem != null &&
+                SMul_cBoxCol.SelectedItem != null
+                )
             {
-                Multiply_btnGenerateEntryGrids.IsEnabled = false;
-                Multiply_btnFindProduct.IsEnabled = false;
+                SMul_btnGenGrid.IsEnabled = true;
                 return;
             }
-            Multiply_btnGenerateEntryGrids.IsEnabled = true;
+            SMul_btnGenGrid.IsEnabled = false;
+            SMul_btnFindProd.IsEnabled = false;
         }
 
-        private void Multiply_btnGenerateEntryGrids_Click(object sender, RoutedEventArgs e)
+        private void SMul_txtScalar_TextChanged(object sender, TextChangedEventArgs e)
         {
-            MultiplyTabLogic.generateEntryGrids(Multiply_subGridA, Multiply_subGridB, Multiply_txtRowsA.Text, Multiply_txtColsA.Text, Multiply_txtRowsB.Text, Multiply_txtColsB.Text);
-            Multiply_btnFindProduct.IsEnabled = true;
+            if (TextValidationCheckers.AreAllStringsNotNull(SMul_txtScalar.Text) &&
+                TextValidationCheckers.AreAllStringsParsableNumeric(
+                        TypeCode.Decimal,
+                        SMul_txtScalar.Text
+                    )
+                )
+            {
+                SMul_btnGenGrid.IsEnabled = true;
+                return;
+            }
+            SMul_btnGenGrid.IsEnabled = false;
+            SMul_btnFindProd.IsEnabled = false;
         }
 
-        private void Multiply_btnFindProduct_Click(object sender, RoutedEventArgs e)
+        private void SMul_btnClear_Click(object sender, RoutedEventArgs e)
         {
-            MultiplyTabLogic.findProduct(Multiply_subGridA, Multiply_subGridB, Multiply_txtRowsA.Text, Multiply_txtColsA.Text, Multiply_txtRowsB.Text, Multiply_txtColsB.Text);
+            SMul_cBoxRow.SelectedIndex = -1;
+            SMul_cBoxCol.SelectedIndex = -1;
+            SMul_txtScalar.Clear();
+
+            SubGridUtilities.ClearSubGridContents(SMul_subGrid);
+
+            SMul_btnGenGrid.IsEnabled = false;
+            SMul_btnFindProd.IsEnabled = false;
         }
 
-        private void Multiply_btnClearAll_Click(object sender, RoutedEventArgs e)
+        private void SMul_btnGenGrid_Click(object sender, RoutedEventArgs e)
         {
-            Multiply_txtRowsA.Clear();
-            Multiply_txtColsA.Clear();
-            Multiply_txtRowsB.Clear();
-            Multiply_txtColsB.Clear();
+            SubGridUtilities.PopulateSubGrid(
+                    SMul_subGrid,
+                    (int)SMul_cBoxRow.SelectedItem,
+                    (int)SMul_cBoxCol.SelectedItem
+                );
+            SMul_btnFindProd.IsEnabled = true;
+        }
 
-            Multiply_subGridA.Children.Clear();
-            Multiply_subGridB.Children.Clear();
+        private void SMul_btnFindProd_Click(object sender, RoutedEventArgs e)
+        {
+            string[] subGridStrings = SubGridUtilities.GetSubGridTextBoxValues_1dStrArray(SMul_subGrid);
+            if (!TextValidationCheckers.AreAllStringsParsableNumeric(TypeCode.Decimal, subGridStrings))
+            {
+                MessageBox.Show(
+                        "Ensure all textboxes in the grid are filled and that they only have numeric values.",
+                        "Missing or invalid values",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                return;
+            }
+            decimal[,] product = MatrixOperations.MultiplyMatrixByScalar(
+                    decimal.Parse(SMul_txtScalar.Text),
+                    SubGridUtilities.GetSubGridTextBoxValuesDecimal(SMul_subGrid)
+                );
+            new ResultWindow(product).ShowDialog();
+        }
 
-            Multiply_subGridA.RowDefinitions.Clear();
-            Multiply_subGridA.ColumnDefinitions.Clear();
-            Multiply_subGridB.RowDefinitions.Clear();
-            Multiply_subGridB.ColumnDefinitions.Clear();
+        /// <summary>
+        /// Event handlers for Matrix Multiplication functionality
+        /// </summary>
 
-            Multiply_btnFindProduct.IsEnabled = false;
+        bool MMul_suppressCBoxEvtHandler = false;
+
+        private void MMul_cBoxesDims_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            if (MMul_suppressCBoxEvtHandler) return;
+            if (MMul_cBoxRowA.SelectedItem != null &&
+                MMul_cBoxColA.SelectedItem != null &&
+                MMul_cBoxRowB.SelectedItem != null &&
+                MMul_cBoxColB.SelectedItem != null &&
+                MMul_cBoxColA.SelectedItem.Equals(MMul_cBoxRowB.SelectedItem)
+                )
+            {
+                MMul_btnGenGrids.IsEnabled = true;
+                return;
+            }
+            MMul_btnGenGrids.IsEnabled = false;
+            MMul_btnFindProd.IsEnabled = false;
+            MMul_btnSwapMatrices.IsEnabled = false;
+        }
+        private void MMul_btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            MMul_cBoxRowA.SelectedItem = -1;
+            MMul_cBoxColA.SelectedItem = -1;
+            MMul_cBoxRowB.SelectedItem = -1;
+            MMul_cBoxColB.SelectedItem = -1;
+
+            SubGridUtilities.ClearSubGridContents(MMul_subGridA);
+            SubGridUtilities.ClearSubGridContents(MMul_subGridB);
+
+            MMul_btnGenGrids.IsEnabled = false;
+            MMul_btnFindProd.IsEnabled = false;
+            MMul_btnSwapMatrices.IsEnabled = false;
+        }
+
+        private void MMul_btnGenGrids_Click(object sender, RoutedEventArgs e)
+        {
+            SubGridUtilities.PopulateSubGrid(
+                    MMul_subGridA,
+                    (int)MMul_cBoxRowA.SelectedItem,
+                    (int)MMul_cBoxColA.SelectedItem
+                );
+            SubGridUtilities.PopulateSubGrid(
+                    MMul_subGridB,
+                    (int)MMul_cBoxRowB.SelectedItem,
+                    (int)MMul_cBoxColB.SelectedItem
+                );
+            MMul_btnFindProd.IsEnabled = true;
+            MMul_btnSwapMatrices.IsEnabled = true;
+        }
+
+        private void MMul_btnFindProd_Click(object sender, RoutedEventArgs e)
+        {
+            string[] subGridStringsA = SubGridUtilities.GetSubGridTextBoxValues_1dStrArray(MMul_subGridA);
+            string[] subGridStringsB = SubGridUtilities.GetSubGridTextBoxValues_1dStrArray(MMul_subGridB);
+            if (!TextValidationCheckers.AreAllStringsParsableNumeric(TypeCode.Decimal, subGridStringsA) ||
+                !TextValidationCheckers.AreAllStringsParsableNumeric(TypeCode.Decimal, subGridStringsB)
+                )
+            {
+                MessageBox.Show(
+                        "Ensure all textboxes in the grid are filled and that they only have numeric values.",
+                        "Missing or invalid values",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                return;
+            }
+            decimal[,] product = MatrixOperations.MultiplyMatrices(
+                    SubGridUtilities.GetSubGridTextBoxValuesDecimal(MMul_subGridA),
+                    SubGridUtilities.GetSubGridTextBoxValuesDecimal(MMul_subGridB)
+                );
+            new ResultWindow(product).ShowDialog();
+        }
+
+        private void MMul_btnSwapMatrices_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (MMul_cBoxRowA.SelectedIndex != MMul_cBoxRowB.SelectedIndex ||
+                MMul_cBoxColA.SelectedIndex != MMul_cBoxColB.SelectedIndex
+                )
+            {
+                MMul_suppressCBoxEvtHandler = true;
+                int tmpIdxRow = MMul_cBoxRowA.SelectedIndex;
+                int tmpIdxCol = MMul_cBoxColA.SelectedIndex;
+                MMul_cBoxRowA.SelectedIndex = MMul_cBoxRowB.SelectedIndex;
+                MMul_cBoxColA.SelectedIndex = MMul_cBoxColB.SelectedIndex;
+                MMul_cBoxRowB.SelectedIndex = tmpIdxRow;
+                MMul_cBoxColB.SelectedIndex = tmpIdxCol;
+                MMul_suppressCBoxEvtHandler = false;
+            }
+            SubGridUtilities.SwapSubGrids(MMul_subGridA, MMul_subGridB);
         }
     }
 }

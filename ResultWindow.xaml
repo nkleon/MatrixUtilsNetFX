@@ -6,7 +6,5 @@
         xmlns:local="clr-namespace:MatrixUtilsNetFX"
         mc:Ignorable="d"
         Title="Result" SizeToContent="WidthAndHeight" MinHeight="135" MinWidth="240" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
-    <Grid x:Name="ResultGrid" Margin="15">
-        
-    </Grid>
+    <UniformGrid x:Name="ResultGrid" Margin="15"/>
 </Window>
